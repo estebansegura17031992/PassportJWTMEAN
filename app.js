@@ -27,9 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(auth.initialize());
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/users', auth.authenticate(),(req,res)=>{
+          return res.status(200).json({
+            "user":req.user.id
+          });
+});
 app.post("/token", function(req, res) {  
-  console.log(req.body)
   if (req.body.email && req.body.password) {
       var email = req.body.email;
       var password = req.body.password;
